@@ -24,7 +24,14 @@ int loadBMP(const char* path, unsigned int* pixelNo, PIXEL** pixel) {
 	FILE *inputBMP = fopen(path, "rb");
 
 	if (inputBMP == NULL) {
-		printf("Error opening bitmap file %s!\n", path);
+		printf("bitmap.h:loadBMP:24 - Error opening file %s!\n", path);
+		return 1;
+	}
+
+	char *extension = strchr(path, '.');
+
+	if (extension == NULL || strcmp(extension, ".bmp")) {
+		printf("bitmap.h:loadBMP:path - Provided file (%s) is not a bitmap-type file!\n", path);
 		return 1;
 	}
 
@@ -37,6 +44,11 @@ int loadBMP(const char* path, unsigned int* pixelNo, PIXEL** pixel) {
 
 	*pixelNo = width * height;
 	*pixel = (PIXEL*)malloc(*pixelNo * sizeof(PIXEL));
+
+	if (*pixel == NULL) {
+		printf("bitmap.h:loadBMP:46 - Error allocating array <*pixel>!\n");
+		return 1;
+	}
 
 	fseek(inputBMP, 54, SEEK_SET);
 
@@ -60,17 +72,31 @@ int loadBMP(const char* path, unsigned int* pixelNo, PIXEL** pixel) {
 }
 
 int saveBMP(const char* newPath, const char* oldPath, unsigned int pixelNo, PIXEL* pixel) {
+	char *extension = strchr(newPath, '.');
+
+	if (extension == NULL || strcmp(extension, ".bmp")) {
+		printf("bitmap.h:saveBMP:newPath - Provided file (%s) is not a bitmap-type file!\n", newPath);
+		return 1;
+	}
+	
 	FILE *outputBMP = fopen(newPath, "wb");
 
 	if (outputBMP == NULL) {
-		printf("Error creating bitmap file %s!\n", newPath);
+		printf("bitmap.h:saveBMP:82 - Error opening file %s!\n", newPath);
 		return 1;
 	}
 
 	FILE *inputBMP = fopen(oldPath, "rb");
 
 	if (inputBMP == NULL) {
-		printf("Error creating bitmap file %s!\n", oldPath);
+		printf("bitmap.h:saveBMP:91 - Error opening file %s!\n", oldPath);
+		return 1;
+	}
+
+	extension = strchr(oldPath, '.');
+
+	if (extension == NULL || strcmp(extension, ".bmp")) {
+		printf("bitmap.h:saveBMP:oldPath - Provided file (%s) is not a bitmap-type file!\n", oldPath);
 		return 1;
 	}
 

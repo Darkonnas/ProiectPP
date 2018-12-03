@@ -4,21 +4,38 @@
 #include <stdio.h>
 
 int chiSquared(const char* testBMPPath) {
-	printf("Performing chi-squared test on bitmap file %s ...\n", testBMPPath);
+	printf("Performing chi-squared test on file %s ...\n", testBMPPath);
 	
 	unsigned int pixelNo;
 	PIXEL *pixelArray = NULL;
-	loadBMP(testBMPPath, &pixelNo, &pixelArray);
+	int load_error = loadBMP(testBMPPath, &pixelNo, &pixelArray);
 
-	if (pixelArray == NULL) {
-		printf("Error loading bitmap file %s!\n", testBMPPath);
+	if (load_error) {
+		printf("chisquared.h:chiSquared:11 - Error loading file %s!\n", testBMPPath);
 		return 1;
 	}
 
 	unsigned int *redFreq = NULL, *greenFreq = NULL, *blueFreq = NULL;
 	redFreq = (unsigned int*)malloc(256 * sizeof(unsigned int));
+
+	if (redFreq == NULL) {
+		printf("chisquared.h:chiSquared:19 - Error allocating array <redFreq>!\n");
+		return 1;
+	}
+
 	greenFreq = (unsigned int*)malloc(256 * sizeof(unsigned int));
+
+	if (greenFreq == NULL) {
+		printf("chisquared.h:chiSquared:26 - Error allocating array <greenFreq>!\n");
+		return 1;
+	}
+
 	blueFreq = (unsigned int*)malloc(256 * sizeof(unsigned int));
+
+	if (blueFreq == NULL) {
+		printf("chisquared.h:chiSquared:33 - Error allocating array <blueFreq>!\n");
+		return 1;
+	}
 
 	memset(redFreq, 0, 256 * sizeof(unsigned int));
 	memset(greenFreq, 0, 256 * sizeof(unsigned int));

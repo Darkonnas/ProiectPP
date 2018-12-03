@@ -33,4 +33,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="peppers.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="enc_peppers.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="dec_peppers.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

@@ -1,7 +1,12 @@
 #pragma once
 
-void getRandArray(unsigned int seed, unsigned int**resultArray, unsigned int resultSize) {
+int getRandArray(unsigned int seed, unsigned int**resultArray, unsigned int resultSize) {
 	*resultArray = (unsigned int*)malloc(resultSize*(sizeof(unsigned int)));
+
+	if (*resultArray == NULL) {
+		printf("random.h:getRandArray:4 - Insufficient memory for random array <resultArray> allocation!\n");
+		return 1;
+	}
 
 	unsigned int currentRand = seed, iterator;
 
@@ -11,4 +16,6 @@ void getRandArray(unsigned int seed, unsigned int**resultArray, unsigned int res
 		currentRand ^= currentRand << 5;
 		*(*resultArray + iterator) = currentRand;
 	}
+
+	return 0;
 }

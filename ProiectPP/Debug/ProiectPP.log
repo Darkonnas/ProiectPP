@@ -1,0 +1,11 @@
+﻿  ProiectPP.c
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(63): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(130): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(53): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(73): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(80): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(160): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(177): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(191): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\chisquared.h(46): warning C4018: '<': signed/unsigned mismatch
+  ProiectPP.vcxproj -> C:\Users\vlad_\source\repos\ProiectPP\Debug\ProiectPP.exe

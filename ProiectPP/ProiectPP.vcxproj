@@ -159,6 +159,11 @@
     <ClInclude Include="encryptions.h" />
     <ClInclude Include="random.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="dec_peppers.bmp" />
+    <Image Include="enc_peppers.bmp" />
+    <Image Include="peppers.bmp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

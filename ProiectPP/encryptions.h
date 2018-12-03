@@ -3,14 +3,14 @@
 #include "random.h"
 
 int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const char* keyFilePath) {
-	printf("Encrypting bitmap file %s ...\n", originalBMPPath);
+	printf("Encrypting file %s ...\n", originalBMPPath);
 
 	unsigned int pixelNo;
 	PIXEL *pixelArray = NULL;
 	int load_error = loadBMP(originalBMPPath, &pixelNo, &pixelArray);
 
 	if (load_error) {
-		printf("Error loading bitmap file %s!\n", originalBMPPath);
+		printf("encryptions.h:encryptBMP:10 - Error loading file %s!\n", originalBMPPath);
 		return 1;
 	}
 
@@ -18,22 +18,37 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 	FILE *keyFile = fopen(keyFilePath, "r");
 
 	if (keyFile == NULL) {
-		printf("Error opening secret key file %s!\n", keyFilePath);
+		printf("encryptions.h:encryptBMP:18 - Error opening file %s!\n", keyFilePath);
 		return 1;
 	}
 
-	fscanf(keyFile, "%u%u", &R0, &SV);
+	int read = fscanf(keyFile, "%u%u", &R0, &SV);
 	fclose(keyFile);
+
+	if (read == 0) {
+		printf("encryptions.h:encryptBMP:25 - Error reading from file %s!\n", keyFilePath);
+		return 1;
+	}
 
 	printf("R0: %u\tSV: %u\n", R0, SV);
 
 	unsigned int *randArray = NULL, *permArray = NULL;
 
-	getRandArray(R0, &randArray, 2 * pixelNo - 1);
+	int rand_error = getRandArray(R0, &randArray, 2 * pixelNo - 1);
+
+	if (rand_error) {
+		printf("encryptions.h:encryptBMP:32 - Error generating random array!\n");
+		return 1;
+	}
 
 	int iterator;
 
 	permArray = (unsigned int*)malloc(pixelNo * sizeof(unsigned int));
+
+	if (permArray == NULL) {
+		printf("encryptions.h:encryptBMP:41 - Error allocating array <permArray>!\n");
+		return 1;
+	}
 
 	for (iterator = 0; iterator < pixelNo; ++iterator)
 		permArray[iterator] = iterator;
@@ -49,6 +64,11 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 
 	PIXEL *auxArray = NULL;
 	auxArray = (PIXEL*)malloc(pixelNo * sizeof(PIXEL));
+
+	if (auxArray == NULL) {
+		printf("encryptions.h:encryptBMP:61 - Error allocating array <auxArray>!\n");
+		return 1;
+	}
 
 	for (iterator = 0; iterator < pixelNo; ++iterator)
 		auxArray[permArray[iterator]] = pixelArray[iterator];
@@ -71,24 +91,24 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 	free(auxArray); free(randArray);
 
 	if (save_error) {
-		printf("Unable to save bitmap file %s!\n", encryptedBMPPath);
+		printf("encryptions.h:encryptBMP:84 - Error saving file %s!\n", encryptedBMPPath);
 		return 1;
 	}
 
-	printf("Encrypted bitmap file %s into file %s!\n", originalBMPPath, encryptedBMPPath);
+	printf("Encrypted file %s into file %s!\n", originalBMPPath, encryptedBMPPath);
 
 	return 0;
 }
 
 int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const char* keyFilePath) {
-	printf("Decrypting bitmap file %s ...\n", encryptedBMPPath);
+	printf("Decrypting file %s ...\n", encryptedBMPPath);
 
 	unsigned int pixelNo;
 	PIXEL *pixelArray = NULL;
 	int load_error = loadBMP(encryptedBMPPath, &pixelNo, &pixelArray);
 
 	if (load_error) {
-		printf("Error loading bitmap file %s!\n", encryptedBMPPath);
+		printf("encryptions.h:decryptBMP:103 - Error loading file %s!\n", encryptedBMPPath);
 		return 1;
 	}
 
@@ -96,18 +116,28 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	FILE *keyFile = fopen(keyFilePath, "r");
 
 	if (keyFile == NULL) {
-		printf("Error opening secret key file %s!\n", keyFilePath);
+		printf("encryptions.h:decryptBMP:113 - Error opening file %s!\n", keyFilePath);
 		return 1;
 	}
 
-	fscanf(keyFile, "%u%u", &R0, &SV);
+	int read = fscanf(keyFile, "%u%u", &R0, &SV);
 	fclose(keyFile);
+
+	if (read == 0) {
+		printf("encryptions.h:encryptBMP:25 - Error reading from file %s\n!", keyFilePath);
+		return 1;
+	}
 
 	printf("R0: %u\tSV: %u\n", R0, SV);
 
 	unsigned int *randArray = NULL, *permArray = NULL;
 
-	getRandArray(R0, &randArray, 2 * pixelNo - 1);
+	int rand_error = getRandArray(R0, &randArray, 2 * pixelNo - 1);
+
+	if (rand_error) {
+		printf("encryptions.h:decryptBMP:125 - Error generating random array!\n");
+		return 1;
+	}
 
 	int iterator;
 
@@ -122,6 +152,11 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 
 	permArray = (unsigned int*)malloc(pixelNo * sizeof(unsigned int));
 
+	if (permArray == NULL) {
+		printf("encryptions.h:decryptBMP:145 - Error allocating array <permArray>!\n");
+		return 1;
+	}
+
 	for (iterator = 0; iterator < pixelNo; ++iterator)
 		permArray[iterator] = iterator;
 
@@ -133,6 +168,12 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	}
 
 	unsigned int *inversePerm = malloc(pixelNo * sizeof(unsigned int));
+
+	if (inversePerm == NULL) {
+		printf("encryptions.h:decryptBMP:162 - Error allocating array <inversePerm>!\n");
+		return 1;
+	}
+
 	for (iterator = 0; iterator < pixelNo; ++iterator) {
 		inversePerm[permArray[iterator]] = iterator;
 	}
@@ -141,6 +182,11 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 
 	PIXEL *auxArray = NULL;
 	auxArray = (PIXEL*)malloc(pixelNo * sizeof(PIXEL));
+
+	if (auxArray == NULL) {
+		printf("encryptions.h:decryptBMP:168 - Error allocating array <auxArray>!\n");
+		return 1;
+	}
 
 	for (iterator = 0; iterator < pixelNo; ++iterator)
 		auxArray[inversePerm[iterator]] = pixelArray[iterator];
@@ -154,11 +200,11 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	free(auxArray); free(randArray);
 
 	if (save_error) {
-		printf("Unable to save bitmap file %s!\n", decryptedBMPPath);
+		printf("encryptions.h:decryptBMP:182 - Error saving file %s!\n", decryptedBMPPath);
 		return 1;
 	}
 
-	printf("Decrypted bitmap file %s into file %s!\n", encryptedBMPPath, decryptedBMPPath);
+	printf("Decrypted file %s into file %s!\n", encryptedBMPPath, decryptedBMPPath);
 
 	return 0;
 }
