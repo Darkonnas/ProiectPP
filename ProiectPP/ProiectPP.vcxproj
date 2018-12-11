@@ -157,12 +157,18 @@
     <ClInclude Include="bitmap.h" />
     <ClInclude Include="chisquared.h" />
     <ClInclude Include="encryptions.h" />
+    <ClInclude Include="patterns.h" />
     <ClInclude Include="random.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="dec_peppers.bmp" />
     <Image Include="enc_peppers.bmp" />
     <Image Include="peppers.bmp" />
+    <Image Include="result.bmp" />
+    <Image Include="test.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

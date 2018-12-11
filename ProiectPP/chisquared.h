@@ -8,7 +8,8 @@ int chiSquared(const char* testBMPPath) {
 	
 	unsigned int pixelNo;
 	PIXEL *pixelArray = NULL;
-	int load_error = loadBMP(testBMPPath, &pixelNo, &pixelArray);
+	unsigned char *header = NULL;
+	int load_error = loadBMPLiniar(testBMPPath, &header, &pixelNo, &pixelArray);
 
 	if (load_error) {
 		printf("chisquared.h:chiSquared:11 - Error loading file %s!\n", testBMPPath);
@@ -58,7 +59,7 @@ int chiSquared(const char* testBMPPath) {
 		blueChannelValue += ((blueFreq[iterator] - averageValue) * (blueFreq[iterator] - averageValue)) / averageValue;
 	}
 
-	printf("Red value: %.2F\nGreen value: %.2F\nBlue value: %.2F\n", redChannelValue, greenChannelValue, blueChannelValue);
+	printf("Red value: %.2lf\nGreen value: %.2lf\nBlue value: %.2lf\n", redChannelValue, greenChannelValue, blueChannelValue);
 
 	free(pixelArray); free(redFreq); free(greenFreq); free(blueFreq);
 

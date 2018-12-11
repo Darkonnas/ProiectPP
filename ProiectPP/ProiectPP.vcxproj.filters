@@ -32,6 +32,9 @@
     <ClInclude Include="bitmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="patterns.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="peppers.bmp">
@@ -43,5 +46,16 @@
     <Image Include="dec_peppers.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="test.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="result.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
