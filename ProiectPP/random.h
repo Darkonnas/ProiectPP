@@ -1,5 +1,4 @@
 #pragma once
-
 int getRandArray(unsigned int seed, unsigned int**resultArray, unsigned int resultSize) {
 	*resultArray = (unsigned int*)malloc(resultSize*(sizeof(unsigned int)));
 

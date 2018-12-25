@@ -2,6 +2,9 @@
 #include "bitmap.h"
 #include "random.h"
 
+int encryptBMP(const char*, const char*, const char*);
+int decryptBMP(const char*, const char*, const char*);
+
 int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const char* keyFilePath) {
 	printf("Encrypting file %s ...\n", originalBMPPath);
 
@@ -20,6 +23,7 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 
 	if (keyFile == NULL) {
 		printf("encryptions.h:encryptBMP:19 - Error opening file %s!\n", keyFilePath);
+		free(header); free(pixelArray);
 		return 1;
 	}
 
@@ -27,7 +31,8 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 	fclose(keyFile);
 
 	if (read == 0) {
-		printf("encryptions.h:encryptBMP:26 - Error reading from file %s!\n", keyFilePath);
+		printf("encryptions.h:encryptBMP:27 - Error reading from file %s!\n", keyFilePath);
+		free(header); free(pixelArray);
 		return 1;
 	}
 
@@ -38,7 +43,8 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 	int rand_error = getRandArray(R0, &randArray, 2 * pixelNo - 1);
 
 	if (rand_error) {
-		printf("encryptions.h:encryptBMP:38 - Error generating random array!\n");
+		printf("encryptions.h:encryptBMP:40 - Error generating random array!\n");
+		free(header); free(pixelArray);
 		return 1;
 	}
 
@@ -47,7 +53,8 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 	permArray = (unsigned int*)malloc(pixelNo * sizeof(unsigned int));
 
 	if (permArray == NULL) {
-		printf("encryptions.h:encryptBMP:47 - Error allocating array <permArray>!\n");
+		printf("encryptions.h:encryptBMP:50 - Error allocating array <permArray>!\n");
+		free(header); free(pixelArray); free(randArray);
 		return 1;
 	}
 
@@ -67,12 +74,15 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 	auxArray = (PIXEL*)malloc(pixelNo * sizeof(PIXEL));
 
 	if (auxArray == NULL) {
-		printf("encryptions.h:encryptBMP:67 - Error allocating array <auxArray>!\n");
+		printf("encryptions.h:encryptBMP:71 - Error allocating array <auxArray>!\n");
+		free(header); free(pixelArray); free(randArray); free(permArray);
 		return 1;
 	}
 
 	for (iterator = 0; iterator < pixelNo; ++iterator)
 		auxArray[permArray[iterator]] = pixelArray[iterator];
+
+	//saveBMPLiniar("peppers_interim.bmp", header, pixelNo, auxArray);
 
 	free(pixelArray); free(permArray);
 
@@ -92,7 +102,7 @@ int encryptBMP(const char* originalBMPPath, const char* encryptedBMPPath, const 
 	free(auxArray); free(randArray); free(header);
 
 	if (save_error) {
-		printf("encryptions.h:encryptBMP:90 - Error saving file %s!\n", encryptedBMPPath);
+		printf("encryptions.h:encryptBMP:95 - Error saving file %s!\n", encryptedBMPPath);
 		return 1;
 	}
 
@@ -110,7 +120,7 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	int load_error = loadBMPLiniar(encryptedBMPPath, &header, &pixelNo, &pixelArray);
 
 	if (load_error) {
-		printf("encryptions.h:decryptBMP:110 - Error loading file %s!\n", encryptedBMPPath);
+		printf("encryptions.h:decryptBMP:115 - Error loading file %s!\n", encryptedBMPPath);
 		return 1;
 	}
 
@@ -118,7 +128,8 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	FILE *keyFile = fopen(keyFilePath, "r");
 
 	if (keyFile == NULL) {
-		printf("encryptions.h:decryptBMP:118 - Error opening file %s!\n", keyFilePath);
+		printf("encryptions.h:decryptBMP:123 - Error opening file %s!\n", keyFilePath);
+		free(header); free(pixelArray);
 		return 1;
 	}
 
@@ -126,7 +137,8 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	fclose(keyFile);
 
 	if (read == 0) {
-		printf("encryptions.h:encryptBMP:125 - Error reading from file %s\n!", keyFilePath);
+		printf("encryptions.h:encryptBMP:131 - Error reading from file %s\n!", keyFilePath);
+		free(header); free(pixelArray);
 		return 1;
 	}
 
@@ -137,7 +149,8 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	int rand_error = getRandArray(R0, &randArray, 2 * pixelNo - 1);
 
 	if (rand_error) {
-		printf("encryptions.h:decryptBMP:137 - Error generating random array!\n");
+		printf("encryptions.h:decryptBMP:144 - Error generating random array!\n");
+		free(header); free(pixelArray);
 		return 1;
 	}
 
@@ -155,7 +168,8 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	permArray = (unsigned int*)malloc(pixelNo * sizeof(unsigned int));
 
 	if (permArray == NULL) {
-		printf("encryptions.h:decryptBMP:155 - Error allocating array <permArray>!\n");
+		printf("encryptions.h:decryptBMP:163 - Error allocating array <permArray>!\n");
+		free(header); free(pixelArray); free(randArray);
 		return 1;
 	}
 
@@ -172,7 +186,8 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	unsigned int *inversePerm = malloc(pixelNo * sizeof(unsigned int));
 
 	if (inversePerm == NULL) {
-		printf("encryptions.h:decryptBMP:172 - Error allocating array <inversePerm>!\n");
+		printf("encryptions.h:decryptBMP:181 - Error allocating array <inversePerm>!\n");
+		free(header); free(pixelArray); free(randArray); free(permArray);
 		return 1;
 	}
 
@@ -186,7 +201,8 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	auxArray = (PIXEL*)malloc(pixelNo * sizeof(PIXEL));
 
 	if (auxArray == NULL) {
-		printf("encryptions.h:decryptBMP:186 - Error allocating array <auxArray>!\n");
+		printf("encryptions.h:decryptBMP:196 - Error allocating array <auxArray>!\n");
+		free(header); free(pixelArray); free(randArray); free(permArray); free(inversePerm);
 		return 1;
 	}
 
@@ -202,7 +218,7 @@ int decryptBMP(const char* encryptedBMPPath, const char* decryptedBMPPath, const
 	free(auxArray); free(randArray); free(header);
 
 	if (save_error) {
-		printf("encryptions.h:decryptBMP:200 - Error saving file %s!\n", decryptedBMPPath);
+		printf("encryptions.h:decryptBMP:211 - Error saving file %s!\n", decryptedBMPPath);
 		return 1;
 	}
 

@@ -14,7 +14,7 @@ typedef struct {
 
 int compareDetections(const void*, const void*);
 double isCovering(DETECTION, DETECTION);
-void deleteNonMax(DETECTION**, unsigned int*, double);
+int deleteNonMax(DETECTION**, unsigned int*, double);
 int startMatch(const char*, const char*, FILE*);
 int match(const char*, const char*, double, unsigned int*, DETECTION**, PIXEL);
 void getCorrelation(PIXEL**, PIXEL**, DETECTION*);
@@ -23,7 +23,7 @@ void colorDetection(PIXEL**, DETECTION);
 int compareDetections(const void* d1, const void* d2) {
 	if (((DETECTION*)d1)->correlation > ((DETECTION*)d2)->correlation) return -1;
 	if (((DETECTION*)d1)->correlation == ((DETECTION*)d2)->correlation) return 0;
-	if (((DETECTION*)d1)->correlation < ((DETECTION*)d2)->correlation) return 1;
+    return 1;
 }
 
 double isCovering(DETECTION d1, DETECTION d2) {
@@ -38,10 +38,10 @@ double isCovering(DETECTION d1, DETECTION d2) {
 
 	intersection.area = (intersection.bottom_right.line - intersection.top_left.line + 1)*(intersection.bottom_right.collumn - intersection.top_left.collumn + 1);
 
-	return (double)intersection.area / (double)(d1.area + d2.area - intersection.area);
+	return (double)intersection.area / ((double)d1.area + (double)d2.area - (double)intersection.area);
 }
 
-void deleteNonMax(DETECTION** detection, unsigned int* detectionNo, double coverPercentage) {
+int deleteNonMax(DETECTION** detection, unsigned int* detectionNo, double coverPercentage) {
 	qsort(*detection, *detectionNo, sizeof(DETECTION), compareDetections);
 
 	int iterator1, iterator2;
@@ -54,20 +54,41 @@ void deleteNonMax(DETECTION** detection, unsigned int* detectionNo, double cover
 					(*detection)[deiterator] = (*detection)[deiterator + 1];
 
 				--(*detectionNo);
-				*detection = realloc(*detection, *detectionNo * sizeof(DETECTION));
+				DETECTION *aux = (DETECTION*)realloc(*detection, *detectionNo * sizeof(DETECTION));
+
+				if (aux == NULL) {
+					printf("deleteNonMax:57 - Error reallocating array <*detection>!\n");
+					return 1;
+				}
+
+				*detection = aux;
+
 				--iterator2;
 			}
+	return 0;
 }
 
 int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 	printf("Starting pattern matching algorithm on file %s...\n", workplacePath);
 	
 	double threshold;
-	fscanf(input, "%lf", &threshold);
+	int read = fscanf(input, "%lf", &threshold);
+
+	if (read == 0) {
+		printf("pattern.h:startMatch:75 - Error reading threshold from input!\n");
+		return 1;
+	}
+
 	printf("Threshold: %lf\n", threshold);
 
 	unsigned int patternNo;
-	fscanf(input, "%u", &patternNo);
+	read = fscanf(input, "%u", &patternNo);
+
+	if (read == 0) {
+		printf("pattern.h:startMatch:85 - Error reading patternNo from input!\n");
+		return 1;
+	}
+
 	printf("Number of patterns: %u\n", patternNo);
 	char **pattern = (char**)malloc(patternNo * sizeof(char*));
 
@@ -82,6 +103,12 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 	}
 
 	PIXEL *color = (PIXEL*)malloc(10 * sizeof(PIXEL));
+
+	if (color == NULL) {
+		printf("pattern.h:startMatch:105 - Error allocating array <color>!\n");
+		return 1;
+	}
+
 	color[0] = (PIXEL) { 0, 0, 255 };
 	color[1] = (PIXEL) { 0, 255, 255 };
 	color[2] = (PIXEL) { 0, 255, 0 };
@@ -94,6 +121,12 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 	color[9] = (PIXEL) { 0, 0, 128 };
 
 	char* workplacePath_grayscale = (char*)malloc(110 * sizeof(char));
+
+	if (workplacePath_grayscale == NULL) {
+		printf("pattern.h:startMatch:123 - Error allocating array <workplacePath_grayscale>!\n");
+		return 1;
+	}
+
 	char* workplace_extension = strchr(workplacePath, '.');
 	memcpy(workplacePath_grayscale, workplacePath, (strlen(workplacePath) - strlen(workplace_extension)) * sizeof(char));
 	workplacePath_grayscale[strlen(workplacePath) - strlen(workplace_extension)] = '\0';
@@ -102,8 +135,14 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 	int workplace_conversion_error = convertGrayscale(workplacePath, workplacePath_grayscale);
 
 	if (workplace_conversion_error) {
-		printf("pattern.h:startMatch:99 - Error converting file %s to grayscale!\n", workplacePath);
-		free(workplacePath_grayscale);
+		printf("pattern.h:startMatch:102 - Error converting file %s to grayscale!\n", workplacePath);
+		free(workplacePath_grayscale); free(color);
+
+		for (iterator = 0; iterator < patternNo; ++iterator) 
+			free(pattern[iterator]);
+		
+		free(pattern);
+
 		return 1;
 	}
 
@@ -114,8 +153,13 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 		int match_error = match(workplacePath_grayscale, pattern[iterator], threshold, &detectionNo, &detection, color[iterator]);
 
 		if (match_error) {
-			printf("pattern.h:startMatch:111 - Error matching pattern %s in file %s!\n", pattern[iterator], workplacePath);
-			free(color);  free(pattern);
+			printf("pattern.h:startMatch:120 - Error matching pattern %s in file %s!\n", pattern[iterator], workplacePath);
+			free(color);  free(workplacePath_grayscale);
+			
+			for (iterator = 0; iterator < patternNo; ++iterator)
+				free(pattern[iterator]);
+
+			free(pattern);
 
 			if (detection)
 				free(detection);
@@ -125,9 +169,20 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 	}
 
 	remove(workplacePath_grayscale);
-	free(pattern); 
+	free(workplacePath_grayscale);
+
+	for (iterator = 0; iterator < patternNo; ++iterator)
+		free(pattern[iterator]);
+
+	free(pattern);
 	
-	deleteNonMax(&detection, &detectionNo, .2);
+	int delete_error = deleteNonMax(&detection, &detectionNo, .2);
+
+	if (delete_error) {
+		printf("pattern.h:startMatch:155 - Error running non-max deletion algorithm!\n");
+		free(detection); free(color);
+		return 1;
+	}
 	
 	unsigned char *result_header = NULL;
 	unsigned int result_width = 0, result_height = 0;
@@ -136,7 +191,8 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 	int workplace_load_error = loadBMP(workplacePath, &result_header, &result_width, &result_height, &resultPixel);
 
 	if (workplace_load_error) {
-		printf("pattern.h:startMatch:133 - Error loading file %s!\n", workplacePath);
+		printf("pattern.h:startMatch:152 - Error loading file %s!\n", workplacePath);
+		free(color); free(detection);
 		return 1;
 	}
 
@@ -145,13 +201,18 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 
 	int result_save_error = saveBMP(resultPath, result_header, result_width, result_height, resultPixel);
 
+	free(color); free(detection); free(result_header);
+
+	for (iterator = 0; iterator < result_height; ++iterator)
+		free(resultPixel[iterator]);
+
+	free(resultPixel);
+
 	if (result_save_error) {
-		printf("pattern.h:match:143 - Error saving file %s!\n", resultPath);
+		printf("pattern.h:startMatch:163 - Error saving file %s!\n", resultPath);
 		return 1;
 	}
 
-	free(color);
-	free(detection);
 	printf("Pattern matching algorithm on file %s has finished!\n", workplacePath);
 	return 0;
 }
@@ -168,7 +229,7 @@ int match(const char* workplacePath_grayscale, const char* pattern, double thres
 	int workplace_load_error = loadBMP(workplacePath_grayscale, &workplace_header, &workplace_width, &workplace_height, &workplacePixel);
 
 	if (workplace_load_error) {
-		printf("pattern.h:match:14 - Error loading file %s!\n", workplacePath_grayscale);
+		printf("pattern.h:match:190 - Error loading file %s!\n", workplacePath_grayscale);
 		return 1;
 	}
 
@@ -184,15 +245,31 @@ int match(const char* workplacePath_grayscale, const char* pattern, double thres
 	int pattern_conversion_error = convertGrayscale(pattern, pattern_grayscale);
 
 	if (pattern_conversion_error) {
-		printf("pattern.h:match:14 - Error converting file %s to grayscale!\n", pattern);
-		free(pattern_grayscale);
+		printf("pattern.h:match:206 - Error converting file %s to grayscale!\n", pattern);
+		free(pattern_grayscale); free(workplace_header);
+
+		int deiterator;
+
+		for (deiterator = 0; deiterator < workplace_height; ++deiterator)
+			free(workplacePixel[deiterator]);
+
+		free(workplacePixel);
+
 		return 1;
 	}
 
 	int pattern_load_error = loadBMP(pattern_grayscale, &pattern_header, &pattern_width, &pattern_height, &patternPixel);
 
 	if (pattern_load_error) {
-		printf("pattern.h:match:21 - Error loading file %s!\n", pattern_grayscale);
+		printf("pattern.h:match:222 - Error loading file %s!\n", pattern_grayscale);
+		free(pattern_grayscale); free(workplace_header);
+
+		int deiterator;
+
+		for (deiterator = 0; deiterator < workplace_height; ++deiterator)
+			free(workplacePixel[deiterator]);
+
+		free(workplacePixel);
 		return 1;
 	}
 
@@ -219,7 +296,14 @@ int match(const char* workplacePath_grayscale, const char* pattern, double thres
 				}
 				else {
 					++(*detectionNo);
-					*detection = (DETECTION*)realloc(*detection, *detectionNo * sizeof(DETECTION));
+					DETECTION * aux = (DETECTION*)realloc(*detection, *detectionNo * sizeof(DETECTION));
+
+					if (aux == NULL) {
+						printf("pattern.h:match:297 - Error reallocating array <*detection>");
+						return 1;
+					}
+
+					*detection = aux;
 					(*detection)[*detectionNo - 1] = currentDetection;
 				}
 			}

@@ -12,29 +12,34 @@ int chiSquared(const char* testBMPPath) {
 	int load_error = loadBMPLiniar(testBMPPath, &header, &pixelNo, &pixelArray);
 
 	if (load_error) {
-		printf("chisquared.h:chiSquared:11 - Error loading file %s!\n", testBMPPath);
+		printf("chisquared.h:chiSquared:12 - Error loading file %s!\n", testBMPPath);
 		return 1;
 	}
+
+	free(header);
 
 	unsigned int *redFreq = NULL, *greenFreq = NULL, *blueFreq = NULL;
 	redFreq = (unsigned int*)malloc(256 * sizeof(unsigned int));
 
 	if (redFreq == NULL) {
-		printf("chisquared.h:chiSquared:19 - Error allocating array <redFreq>!\n");
+		printf("chisquared.h:chiSquared:22 - Error allocating array <redFreq>!\n");
+		free(pixelArray);
 		return 1;
 	}
 
 	greenFreq = (unsigned int*)malloc(256 * sizeof(unsigned int));
 
 	if (greenFreq == NULL) {
-		printf("chisquared.h:chiSquared:26 - Error allocating array <greenFreq>!\n");
+		printf("chisquared.h:chiSquared:30 - Error allocating array <greenFreq>!\n");
+		free(pixelArray); free(redFreq);
 		return 1;
 	}
 
 	blueFreq = (unsigned int*)malloc(256 * sizeof(unsigned int));
 
 	if (blueFreq == NULL) {
-		printf("chisquared.h:chiSquared:33 - Error allocating array <blueFreq>!\n");
+		printf("chisquared.h:chiSquared:38 - Error allocating array <blueFreq>!\n");
+		free(pixelArray); free(redFreq); free(greenFreq);
 		return 1;
 	}
 

@@ -6,6 +6,13 @@ typedef struct {
 	unsigned char B, G, R;
 }PIXEL;
 
+PIXEL pixelXORpixel(PIXEL, PIXEL);
+PIXEL pixelXORu_int(PIXEL, unsigned int);
+int loadBMPLiniar(const char*, unsigned char**, unsigned int*, PIXEL**);
+int saveBMPLiniar(const char*, unsigned char*, unsigned int, PIXEL*);
+int loadBMP(const char*, unsigned char**, unsigned int*, unsigned int*, PIXEL***);
+int saveBMP(const char*, unsigned char*, unsigned int, unsigned int, PIXEL**);
+
 PIXEL pixelXORpixel(PIXEL pixel1, PIXEL pixel2) {
 	PIXEL result;
 
@@ -32,6 +39,7 @@ int loadBMPLiniar(const char* loadPath, unsigned char** header, unsigned int* pi
 
 	if (extension == NULL || strcmp(extension, ".bmp")) {
 		printf("bitmap.h:loadBMPLiniar:loadPath - Provided file (%s) is not a bitmap-type file!\n", loadPath);
+		fclose(inputBMP);
 		return 1;
 	}
 
@@ -39,6 +47,7 @@ int loadBMPLiniar(const char* loadPath, unsigned char** header, unsigned int* pi
 
 	if (*header == NULL) {
 		printf("bitmap.h:loadBMPLiniar:38 - Error allocating array <*header>!\n");
+		fclose(inputBMP);
 		return 1;
 	}
 
@@ -54,6 +63,7 @@ int loadBMPLiniar(const char* loadPath, unsigned char** header, unsigned int* pi
 
 	if (*pixelArray == NULL) {
 		printf("bitmap.h:loadBMPLiniar:55 - Error allocating array <*pixel>!\n");
+		fclose(inputBMP);
 		free(*header);
 		return 1;
 	}
@@ -131,13 +141,15 @@ int loadBMP(const char* loadPath, unsigned char** header, unsigned int* width, u
 
 	if (extension == NULL || strcmp(extension, ".bmp")) {
 		printf("bitmap.h:loadBMP:loadPath - Provided file (%s) is not a bitmap-type file!\n", loadPath);
+		fclose(inputBMP);
 		return 1;
 	}
 
 	*header = (unsigned char*)malloc(54 * sizeof(unsigned char));
 
 	if (*header == NULL) {
-		printf("bitmap.h:loadBMP:140 - Error allocating array <*header>!\n");
+		printf("bitmap.h:loadBMP:141 - Error allocating array <*header>!\n");
+		fclose(inputBMP);
 		return 1;
 	}
 
@@ -152,7 +164,8 @@ int loadBMP(const char* loadPath, unsigned char** header, unsigned int* width, u
 	*pixelMap = (PIXEL**)malloc(*height * sizeof(PIXEL*));
 
 	if (*pixelMap == NULL) {
-		printf("bitmap.h:loadBMP:154 - Error allocating array <*pixelMap>!\n");
+		printf("bitmap.h:loadBMP:157 - Error allocating array <*pixelMap>!\n");
+		fclose(inputBMP);
 		free(*header);
 		return 1;
 	}
@@ -161,7 +174,9 @@ int loadBMP(const char* loadPath, unsigned char** header, unsigned int* width, u
 		(*pixelMap)[iterator] = (PIXEL*)malloc(*width * sizeof(PIXEL));
 
 		if ((*pixelMap)[iterator] == NULL) {
-			printf("bitmap.h:loadBMP:163 - Error allocating array <(*pixelMap)[%d]>!\n", iterator);
+			printf("bitmap.h:loadBMP:167 - Error allocating array <(*pixelMap)[%d]>!\n", iterator);
+			fclose(inputBMP);
+			free(*header);
 
 			int deiterator;
 
@@ -203,7 +218,7 @@ int saveBMP(const char* savePath, unsigned char* header, unsigned int width, uns
 	FILE *outputBMP = fopen(savePath, "wb");
 
 	if (outputBMP == NULL) {
-		printf("bitmap.h:saveBMP:186 - Error opening file %s!\n", savePath);
+		printf("bitmap.h:saveBMP:211 - Error opening file %s!\n", savePath);
 		return 1;
 	}
 
@@ -235,7 +250,7 @@ int convertGrayscale(const char* originalPath, const char* resultPath) {
 	FILE *originalBMP = fopen(originalPath, "rb");
 
 	if (originalBMP == NULL) {
-		printf("bitmap.h:convertGrayscale:235 - Cannot open file %s!\n", originalPath);
+		printf("bitmap.h:convertGrayscale:243 - Cannot open file %s!\n", originalPath);
 		return 1;
 	}
 
@@ -243,6 +258,7 @@ int convertGrayscale(const char* originalPath, const char* resultPath) {
 
 	if (strcmp(originalPath_extension, ".bmp")) {
 		printf("bitmap.h:convertGrayscale:originalBMPPath - Provided file (%s) is not a bitmap-type file!\n", originalPath);
+		fclose(originalBMP);
 		return 1;
 	}
 
@@ -250,13 +266,15 @@ int convertGrayscale(const char* originalPath, const char* resultPath) {
 
 	if (strcmp(resultPath_extension, ".bmp")) {
 		printf("bitmap.h:convertGrayscale:resultBMPPath - Provided file (%s) is not a bitmap-type file!\n", resultPath);
+		fclose(originalBMP);
 		return 1;
 	}
 
 	FILE *resultBMP = fopen(resultPath, "wb");
 
 	if (resultBMP == NULL) {
-		printf("bitmap.h:convertGrayscale:256 - Cannot open file %s!\n", resultPath);
+		printf("bitmap.h:convertGrayscale:266 - Cannot open file %s!\n", resultPath);
+		fclose(originalBMP);
 		return 1;
 	}
 

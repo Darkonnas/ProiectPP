@@ -1,34 +1,39 @@
 ﻿  ProiectPP.c
-c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(69): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(110): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(160): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(184): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(222): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(274): warning C4244: '=': conversion from 'double' to 'unsigned char', possible loss of data
-c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(54): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(74): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(81): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(162): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(179): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(193): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\chisquared.h(47): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(79): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(120): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(173): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(199): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(237): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\bitmap.h(292): warning C4244: '=': conversion from 'double' to 'unsigned char', possible loss of data
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(61): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(82): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(91): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(176): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(194): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\encryptions.h(209): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\chisquared.h(52): warning C4018: '<': signed/unsigned mismatch
 c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(49): warning C4018: '<': signed/unsigned mismatch
 c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(50): warning C4018: '<': signed/unsigned mismatch
 c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(53): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(78): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(112): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(143): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(99): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(141): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(151): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(159): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(174): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(199): warning C4018: '<': signed/unsigned mismatch
 c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(206): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(207): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(235): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(239): warning C4018: '<': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(251): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(252): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(260): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(261): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(269): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(270): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(279): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(281): warning C4018: '<=': signed/unsigned mismatch
-c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(27): warning C4715: 'compareDetections': not all control paths return a value
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(253): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(269): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(283): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(284): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(319): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(323): warning C4018: '<': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(335): warning C4018: '<=': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(336): warning C4018: '<=': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(344): warning C4018: '<=': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(345): warning C4018: '<=': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(353): warning C4018: '<=': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(354): warning C4018: '<=': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(363): warning C4018: '<=': signed/unsigned mismatch
+c:\users\vlad_\source\repos\proiectpp\proiectpp\patterns.h(365): warning C4018: '<=': signed/unsigned mismatch
   ProiectPP.vcxproj -> C:\Users\vlad_\source\repos\ProiectPP\Debug\ProiectPP.exe
