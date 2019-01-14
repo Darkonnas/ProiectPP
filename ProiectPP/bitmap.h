@@ -77,7 +77,7 @@ int loadBMPLiniar(const char* loadPath, unsigned char** header, unsigned int* pi
 
 	for (line = height - 1; line >= 0; --line) {
 		for (collumn = 0; collumn < width; ++collumn)
-			fread(&(*pixelArray)[line * height + collumn], sizeof(PIXEL), 1, inputBMP);
+			fread(&(*pixelArray)[line * width + collumn], sizeof(PIXEL), 1, inputBMP);
 
 		fseek(inputBMP, padding, SEEK_CUR);
 	}
@@ -118,7 +118,7 @@ int saveBMPLiniar(const char* savePath, unsigned char* header, unsigned int pixe
 
 	for (line = height - 1; line >= 0; --line) {
 		for (collumn = 0; collumn < width; ++collumn)
-			fwrite(&pixelArray[line * height + collumn], sizeof(PIXEL), 1, outputBMP);
+			fwrite(&pixelArray[line * width + collumn], sizeof(PIXEL), 1, outputBMP);
 
 		char a = '0';
 		fwrite(&a, sizeof(char), padding, outputBMP);

@@ -149,7 +149,7 @@ int startMatch(const char* workplacePath, const char* resultPath, FILE* input) {
 	DETECTION *detection = NULL;
 	unsigned int detectionNo = 0;
 	for (iterator = 0; iterator < patternNo; ++iterator) {
-		printf("Pattern: %s\n", pattern[iterator]);
+		printf("Matching pattern: %s\n", pattern[iterator]);
 		int match_error = match(workplacePath_grayscale, pattern[iterator], threshold, &detectionNo, &detection, color[iterator]);
 
 		if (match_error) {
